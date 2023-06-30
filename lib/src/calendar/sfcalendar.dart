@@ -6202,7 +6202,7 @@ class _SfCalendarState extends State<SfCalendar>
     if (widget.showDatePickerButton) {
       todayWidth = _useMobilePlatformUI
           ? iconWidth
-          : _getTextWidgetWidth(_localizations.todayLabel, widget.headerHeight,
+          : _getTextWidgetWidth('Ir para hoje', widget.headerHeight,
                       _minWidth - totalArrowWidth, context,
                       style: style)
                   .width +
