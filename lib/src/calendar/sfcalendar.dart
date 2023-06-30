@@ -7951,7 +7951,7 @@ class _CalendarHeaderViewState extends State<_CalendarHeaderView> {
                       alignment: Alignment.center,
                       child: Icon(
                         Icons.today,
-                        color: style.color,
+                        color: headerTextColor,
                         size: style.fontSize,
                       ))
                   : Container(
