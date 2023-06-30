@@ -7445,7 +7445,7 @@ class _CalendarHeaderViewState extends State<_CalendarHeaderView> {
         ? widget.headerStyle.textStyle!.fontSize
         : widget.calendarTheme.headerTextStyle?.fontSize;
     headerIconTextWidth ??= 14;
-    final String todayText = widget.localizations.todayLabel;
+    final String todayText = "Ir para hoje";
 
     double maxHeaderHeight = 0;
 
