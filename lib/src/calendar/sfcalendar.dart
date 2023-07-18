@@ -6115,7 +6115,7 @@ class _SfCalendarState extends State<SfCalendar>
         ? widget.headerStyle.textStyle!.color
         : (_calendarTheme.headerTextStyle?.color ?? Colors.green);
     headerTextColor ??= Colors.black87;
-    final TextStyle style = TextStyle(color: headerTextColor, fontSize: 12);
+    final TextStyle style = TextStyle(color: headerTextColor, fontSize: 21);
     int selectedIndex = -1;
     final Color? todayColor =
         widget.todayHighlightColor ?? _calendarTheme.todayHighlightColor;
@@ -8266,6 +8266,19 @@ class _CalendarHeaderViewState extends State<_CalendarHeaderView> {
       case CalendarView.day:
       case CalendarView.week:
       case CalendarView.workWeek:
+        {
+          final DateTime headerDate = widget.controller.displayDate!;
+          if (headerDateFormat != null) {
+            return DateFormat(headerDateFormat, widget.locale)
+                .format(headerDate)
+                .toString();
+          }
+          return DateFormat(monthFormat, widget.locale)
+                  .format(headerDate)
+                  .toString() +
+              ' ' +
+              headerDate.year.toString();
+        }
       case CalendarView.timelineDay:
         {
           final DateTime headerDate = widget.visibleDates[0];
