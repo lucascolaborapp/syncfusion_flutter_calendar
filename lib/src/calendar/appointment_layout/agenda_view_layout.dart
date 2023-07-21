@@ -751,7 +751,7 @@ class _AgendaViewRenderObject extends RenderBox
           label: DateFormat('EEEEE').format(selectedDate!).toString() +
               DateFormat('dd/MMMM/yyyy').format(selectedDate!).toString() +
               ', '
-                  'No events',
+                  'Sem eventos',
           textDirection: TextDirection.ltr,
         ),
       ));
