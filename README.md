@@ -1,6 +1,6 @@
 ﻿![syncfusion_flutter_calendar_banner](https://cdn.syncfusion.com/content/images/FTControl/Flutter/calender+banner+image.png)
 
-# Flutter Calendar
+# Flutter Calendar Login
 
 The Flutter Calendar widget has built-in configurable views such as day, week, workweek, month, schedule, timeline day, timeline week, timeline workweek and timeline month that provide basic functionalities for scheduling and representing appointments/events efficiently.
 
