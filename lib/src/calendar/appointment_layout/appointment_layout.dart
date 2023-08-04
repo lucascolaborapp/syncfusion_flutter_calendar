@@ -1993,8 +1993,6 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
         style: calendar.appointmentTextStyle,
       );
 
-      print(appointment.position);
-
       final TextPainter textPainter = TextPainter(
         text: span,
         textDirection: TextDirection.ltr,
