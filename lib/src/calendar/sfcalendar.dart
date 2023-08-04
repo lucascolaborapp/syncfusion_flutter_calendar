@@ -7654,7 +7654,7 @@ class _CalendarHeaderViewState extends State<_CalendarHeaderView> {
             alignment: Alignment.center,
             color: widget.headerStyle.backgroundColor ??
                 widget.calendarTheme.headerBackgroundColor,
-            width: isCenterAlignment && headerWidth > 200 ? 200 : headerWidth,
+            width: 180,
             height: headerHeight,
             padding: const EdgeInsets.all(2),
             child: Material(
@@ -8045,28 +8045,32 @@ class _CalendarHeaderViewState extends State<_CalendarHeaderView> {
     } else {
       if (widget.isMobilePlatform) {
         rowChildren = <Widget>[
-          leftArrow,
+          SizedBox(
+            width: todayIconWidth,
+          ),
           headerText,
           todayIcon,
-          dividerWidget,
-          calendarViewIcon,
-          rightArrow,
         ];
       } else {
         rowChildren = <Widget>[
-          leftArrow,
-          headerText,
-          rightArrow,
+          SizedBox(
+            width: todayIconWidth,
+          ),
+          Row(
+            children: <Widget>[
+              leftArrow,
+              headerText,
+              rightArrow,
+            ],
+          ),
           todayIcon,
-          dividerWidget,
         ];
-        useMobilePlatformUI
-            ? rowChildren.add(calendarViewIcon)
-            : rowChildren.addAll(children);
       }
 
       return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: !widget.isMobilePlatform
+              ? MainAxisAlignment.spaceBetween
+              : MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: rowChildren);
     }
