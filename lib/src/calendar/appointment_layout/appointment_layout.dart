@@ -1491,11 +1491,31 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
         }
 
         child.paint(
-            context,
-            Offset(appointmentView.appointmentRect!.left,
-                appointmentView.appointmentRect!.top));
+          context,
+          Offset(
+            appointmentView.appointmentRect!.left,
+            appointmentView.appointmentRect!.top,
+          ),
+        );
+
+        child = childAfter(child);
+      }
+
+      child = firstChild;
+
+      for (int i = 0; i < appointmentCollection.length; i++) {
+        final AppointmentView appointmentView = appointmentCollection[i];
+        if (appointmentView.appointment == null ||
+            child == null ||
+            appointmentView.appointmentRect == null) {
+          continue;
+        }
+
         _updateAppointmentHovering(
-            appointmentView.appointmentRect!, context.canvas);
+          appointmentView,
+          appointmentView.appointmentRect!,
+          context.canvas,
+        );
 
         child = childAfter(child);
       }
@@ -1514,7 +1534,11 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
 
         final RRect moreRegionRect = monthAppointmentCountViews[keys[i]]!;
         child.paint(context, Offset(moreRegionRect.left, moreRegionRect.top));
-        _updateAppointmentHovering(moreRegionRect, context.canvas);
+        _updateAppointmentHovering(
+          null,
+          moreRegionRect,
+          context.canvas,
+        );
 
         child = childAfter(child);
       }
@@ -1722,7 +1746,7 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
           }
         }
 
-        _updateAppointmentHovering(appointmentRect, canvas);
+        _updateAppointmentHovering(appointmentView, appointmentRect, canvas);
       }
     }
 
@@ -1757,7 +1781,7 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
         }
       }
 
-      _updateAppointmentHovering(moreRegionRect, canvas);
+      _updateAppointmentHovering(null, moreRegionRect, canvas);
     }
   }
 
@@ -1935,7 +1959,11 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
     return appointmentCollection;
   }
 
-  void _updateAppointmentHovering(RRect rect, Canvas canvas) {
+  void _updateAppointmentHovering(
+    AppointmentView? appointment,
+    RRect rect,
+    Canvas canvas,
+  ) {
     final Offset? hoverPosition = appointmentHoverPosition.value;
     if (hoverPosition == null) {
       return;
@@ -1945,12 +1973,60 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
         rect.right > hoverPosition.dx &&
         rect.top < hoverPosition.dy &&
         rect.bottom > hoverPosition.dy) {
+      // Draws outline
       _appointmentPainter.color =
           calendarTheme.selectionBorderColor!.withOpacity(0.4);
       _appointmentPainter.strokeWidth = 2;
       _appointmentPainter.style = PaintingStyle.stroke;
       canvas.drawRect(rect.outerRect, _appointmentPainter);
       _appointmentPainter.style = PaintingStyle.fill;
+
+      // Draws tooltip
+
+      if (appointment == null) {
+        return;
+      }
+
+      final String tooltipText = appointment.appointment?.subject ?? '';
+      final TextSpan span = TextSpan(
+        text: tooltipText,
+        style: calendar.appointmentTextStyle,
+      );
+
+      print(appointment.position);
+
+      final TextPainter textPainter = TextPainter(
+        text: span,
+        textDirection: TextDirection.ltr,
+      );
+
+      textPainter.layout(); // Calcula o tamanho do texto
+
+      final double tooltipWidth =
+          textPainter.width + 16.0; // Largura do tooltip (texto + padding)
+      final double tooltipHeight =
+          textPainter.height + 8.0; // Altura do tooltip (texto + padding)
+
+      final double tooltipX =
+          rect.left + (rect.width - tooltipWidth) / 2; // Posição X do tooltip
+      final double tooltipY = rect.bottom +
+          4.0; // Posição Y do tooltip (4.0 para distância do retângulo)
+
+      final Rect tooltipRect =
+          Rect.fromLTWH(tooltipX, tooltipY, tooltipWidth, tooltipHeight);
+
+      // Desenha o retângulo de fundo do tooltip
+      final Paint tooltipBgPaint = Paint()
+        ..color = Colors.black.withOpacity(0.8);
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(tooltipRect, Radius.circular(4.0)),
+        tooltipBgPaint,
+      );
+
+      // Desenha o texto do tooltip
+      final Offset textOffset = Offset(tooltipX + 8.0,
+          tooltipY + 4.0); // Deslocamento para dentro do retângulo
+      textPainter.paint(canvas, textOffset);
     }
   }
 
@@ -2021,14 +2097,14 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
           textWidth <
               (calendar.appointmentTextStyle.fontSize ?? 15) *
                   textScaleFactor) {
-        _updateAppointmentHovering(appointmentRect, canvas);
+        _updateAppointmentHovering(appointmentView, appointmentRect, canvas);
 
         continue;
       }
 
       if ((_textPainter.maxLines == 1 || _textPainter.maxLines == null) &&
           _textPainter.height > totalHeight) {
-        _updateAppointmentHovering(appointmentRect, canvas);
+        _updateAppointmentHovering(appointmentView, appointmentRect, canvas);
         continue;
       }
 
@@ -2062,7 +2138,7 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
         }
       }
 
-      _updateAppointmentHovering(appointmentRect, canvas);
+      _updateAppointmentHovering(appointmentView, appointmentRect, canvas);
     }
   }
 
@@ -2266,7 +2342,7 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
       _textPainter.layout(minWidth: 0, maxWidth: maxWidth);
       if ((_textPainter.maxLines == null || _textPainter.maxLines == 1) &&
           _textPainter.height > totalHeight) {
-        _updateAppointmentHovering(appointmentRect, canvas);
+        _updateAppointmentHovering(appointmentView, appointmentRect, canvas);
         continue;
       }
 
@@ -2303,7 +2379,7 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
         }
       }
 
-      _updateAppointmentHovering(appointmentRect, canvas);
+      _updateAppointmentHovering(appointmentView, appointmentRect, canvas);
     }
   }
 
