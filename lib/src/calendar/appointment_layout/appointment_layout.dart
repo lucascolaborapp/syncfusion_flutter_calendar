@@ -1543,6 +1543,8 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
     }
   }
 
+  //teste
+
   void _drawCustomAppointmentView(Canvas canvas) {
     canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height));
     _appointmentPainter.isAntiAlias = true;
