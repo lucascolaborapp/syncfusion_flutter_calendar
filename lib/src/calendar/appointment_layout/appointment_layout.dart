@@ -1501,6 +1501,27 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
         child = childAfter(child);
       }
 
+      if (view == CalendarView.month &&
+          calendar.monthViewSettings.appointmentDisplayMode ==
+              MonthAppointmentDisplayMode.appointment) {
+        final List<int> keys = monthAppointmentCountViews.keys.toList();
+        for (int i = 0; i < keys.length; i++) {
+          if (child == null) {
+            continue;
+          }
+
+          final RRect moreRegionRect = monthAppointmentCountViews[keys[i]]!;
+          child.paint(context, Offset(moreRegionRect.left, moreRegionRect.top));
+          _updateAppointmentHovering(
+            null,
+            moreRegionRect,
+            context.canvas,
+          );
+
+          child = childAfter(child);
+        }
+      }
+
       child = firstChild;
 
       for (int i = 0; i < appointmentCollection.length; i++) {
@@ -1514,29 +1535,6 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
         _updateAppointmentHovering(
           appointmentView,
           appointmentView.appointmentRect!,
-          context.canvas,
-        );
-
-        child = childAfter(child);
-      }
-
-      if (view != CalendarView.month ||
-          calendar.monthViewSettings.appointmentDisplayMode !=
-              MonthAppointmentDisplayMode.appointment) {
-        return;
-      }
-
-      final List<int> keys = monthAppointmentCountViews.keys.toList();
-      for (int i = 0; i < keys.length; i++) {
-        if (child == null) {
-          continue;
-        }
-
-        final RRect moreRegionRect = monthAppointmentCountViews[keys[i]]!;
-        child.paint(context, Offset(moreRegionRect.left, moreRegionRect.top));
-        _updateAppointmentHovering(
-          null,
-          moreRegionRect,
           context.canvas,
         );
 
